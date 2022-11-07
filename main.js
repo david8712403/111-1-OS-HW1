@@ -1,5 +1,5 @@
-const SHAPE_A = [50, 80];
-const SHAPE_B = [80, 50];
+const SHAPE_A = [500, 800];
+const SHAPE_B = [800, 500];
 
 const ROW = SHAPE_A[0];
 const COL = SHAPE_B[1];
@@ -69,31 +69,21 @@ async function main() {
   const A = generateA();
   const B = generateB();
 
-  console.log("A: For-loops (1 thread)");
-  for (let i = 0; i < 3; i++) {
-    let start = Date.now();
-    let metric = initMetric();
-    await exec(A, B, metric, 1);
-    let end = Date.now();
-    console.log(`(${i}): ${end - start} ms`);
-  }
+  const jobName = process.argv[2];
+  let metric = initMetric();
 
-  console.log("B1: Multithread (50 threads)");
-  for (let i = 0; i < 3; i++) {
-    let start = Date.now();
-    let metric = initMetric();
-    await exec(A, B, metric, 50);
-    let end = Date.now();
-    console.log(`(${i}): ${end - start} ms`);
-  }
-
-  console.log("B2: Multithread (10 threads)");
-  for (let i = 0; i < 3; i++) {
-    let start = Date.now();
-    let metric = initMetric();
-    await exec(A, B, metric, 10);
-    let end = Date.now();
-    console.log(`(${i}): ${end - start} ms`);
+  switch (jobName) {
+    case "A":
+      await exec(A, B, metric, 1);
+      break;
+    case "B1":
+      await exec(A, B, metric, 50);
+      break;
+    case "B2":
+      await exec(A, B, metric, 10);
+      break;
+    default:
+      throw new Error(`No job: ${jobName} found!`);
   }
 }
 
